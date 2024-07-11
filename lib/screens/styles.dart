@@ -24,6 +24,11 @@ const TextStyle kButtonTextStyle = TextStyle(
 );
 
 // Define button styles
+final ButtonStyle kButtonStyle = ElevatedButton.styleFrom(
+  primary: Color(0xFFFDEB3D),
+  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+  textStyle: kButtonTextStyle,
+);
 
 // Define container decorations
 const BoxDecoration kDrawerHeaderDecoration = BoxDecoration(
@@ -58,9 +63,29 @@ const BoxDecoration kContainerDecoration = BoxDecoration(
   ],
 );
 
-// ListTile style
+// Define list tile styles
+const ListTileStyle kListTileStyle = ListTileStyle(
+  dense: true,
+  contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+  leading: CircleAvatar(
+    radius: 30,
+    backgroundColor: Colors.grey,
+  ),
+  title: TextStyle(
+    fontSize: 18.0,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+  ),
+  subtitle: TextStyle(
+    fontSize: 14.0,
+    color: Colors.grey,
+  ),
+  trailing: Icon(
+    Icons.arrow_forward,
+    color: Colors.black,
+  ),
+);
 
-// Input decoration
 final InputDecoration kInputDecoration = InputDecoration(
   labelStyle: TextStyle(color: Colors.black54),
   enabledBorder: OutlineInputBorder(

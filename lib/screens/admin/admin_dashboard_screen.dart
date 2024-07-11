@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http; // Import the HTTP package
-import 'dart:convert'; // Import for JSON decoding
+import 'dart:convert'; 
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import '../widgets/common_layout.dart';
-import '../screens/sidebar.dart';
+import '../../widgets/common_layout.dart';
+import '../../screens/sidebar.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   @override
@@ -75,6 +75,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         fontSize: 15.0,
         fontWeight: FontWeight.bold,
         color: Color(0xFFD9D9D9), // Example: Customize text color
+        
       ),
       drawer: CustomSidebar(),
       child: Stack(
@@ -92,7 +93,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     icon: MdiIcons.accountMultiple,
                     title: 'All Users',
                     count: allUsersCount.toString(),
-                    url: '/users_all',
+                    url: '/users',
                   ),
                   SizedBox(height: 20.0),
                   Row(
@@ -123,7 +124,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           icon: MdiIcons.accountGroup,
                           title: 'Clients',
                           count: clientsCount.toString(),
-                          url: '/clnt_all',
+                          url: '/list_clients',
                         ),
                       ),
                     ],
@@ -136,7 +137,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           icon: MdiIcons.accountBoxMultiple,
                           title: 'Employees',
                           count: employeesCount.toString(),
-                          url: '/employee_all',
+                          url: '/list_employees',
                         ),
                       ),
                       Expanded(

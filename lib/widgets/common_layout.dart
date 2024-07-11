@@ -24,6 +24,7 @@ class CommonLayout extends StatelessWidget {
       ),
       drawer: drawer, // Use the passed drawer widget
       body: child,
+      backgroundColor: Color(0xFFFDEB3D),
     );
   }
 }

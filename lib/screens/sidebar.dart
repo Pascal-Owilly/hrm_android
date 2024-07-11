@@ -46,7 +46,7 @@ class CustomSidebar extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/employee_new');
+                    Navigator.pushNamed(context, '/add_new_employee');
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFFDEB3D)),
@@ -67,7 +67,7 @@ class CustomSidebar extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/employee_bulk_register');
+                    Navigator.pushNamed(context, '/employee_bulk_upload');
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFFDEB3D)),
@@ -113,7 +113,7 @@ class CustomSidebar extends StatelessWidget {
                 style: TextStyle(fontSize: 12.0),
                 ),
                 onTap: () {
-                  Navigator.pushReplacementNamed(context, '/clients_all');
+                  Navigator.pushReplacementNamed(context, '/list_clients');
                 },
               ),
               ListTile(
@@ -124,7 +124,7 @@ class CustomSidebar extends StatelessWidget {
                
                 
                 onTap: () {
-                  Navigator.pushReplacementNamed(context, '/client_new');
+                  Navigator.pushReplacementNamed(context, '/create_client');
                 },
               ),
             ],
@@ -133,14 +133,14 @@ class CustomSidebar extends StatelessWidget {
             leading: Icon(Icons.people, color: Color(0xFF773697)),
             title: Text('Employee', style: TextStyle(color: Colors.black)),
             onTap: () {
-              Navigator.pushReplacementNamed(context, '/employee');
+              Navigator.pushReplacementNamed(context, '/list_employees');
             },
           ),
           ListTile(
             leading: Icon(Icons.calendar_today, color: Color(0xFF773697)),
             title: Text('Attendance', style: TextStyle(color: Colors.black)),
             onTap: () {
-              Navigator.pushReplacementNamed(context, '/attendance');
+              Navigator.pushReplacementNamed(context, '/attendance_admin_view');
             },
           ),
           ExpansionTile(
