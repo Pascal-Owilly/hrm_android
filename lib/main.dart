@@ -33,26 +33,63 @@ class MyApp extends StatelessWidget {
         primaryColor: Color(0xFFFDEB3D),
       ),
       home: HomeScreen(), // Set the initial screen to HomeScreen
-      routes: {
-        '/home': (context) => HomeScreen(),
-        '/login': (context) => LoginScreen(),
-        '/admin': (context) => AdminDashboardScreen(),
-        '/users': (context) => UserListScreen(),
-         '/admin_list': (context) => AdminListScreen(),
-        '/attendance_admin_view': (context) => AttendanceScreen(),
-        '/add_new_employee': (context) => NewEmployeeScreen(),
-        '/employee_bulk_upload': (context) => EmployeeBulkUploadScreen(),
-        '/create_client': (context) => NewClientScreen(),
-        '/list_clients': (context) => ClientListScreen(),
-        '/single_client': (context) => ClientInfoScreen(clientId: 'id'),
-        '/edit_client': (context) => EditClientScreen(clientId: 'id'),
-        '/list_employees': (context) => EmployeeListScreen(),
-        '/user_detail': (context) => UserDetailScreen(userId: 'id'),
-        '/user_edit': (context) => EditUserScreen(userId: 'id'),
-        '/user_archive': (context) => ArchiveUserScreen(userId: 'id'),
-        '/user_unarchive': (context) => UnarchiveUserScreen(userId: 'id'),
-        '/user_delete': (context) => DeleteUserScreen(userId: 'id'),
-        '/archived_users': (context) => ArchivedUsersScreen(),
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case '/home':
+            return MaterialPageRoute(builder: (context) => HomeScreen());
+          case '/login':
+            return MaterialPageRoute(builder: (context) => LoginScreen());
+          case '/admin':
+            return MaterialPageRoute(builder: (context) => AdminDashboardScreen());
+          case '/users':
+            return MaterialPageRoute(builder: (context) => UserListScreen());
+          case '/admin_list':
+            return MaterialPageRoute(builder: (context) => AdminListScreen());
+          case '/attendance_admin_view':
+            return MaterialPageRoute(builder: (context) => AttendanceScreen());
+          case '/add_new_employee':
+            return MaterialPageRoute(builder: (context) => NewEmployeeScreen());
+          case '/employee_bulk_upload':
+            return MaterialPageRoute(builder: (context) => EmployeeBulkUploadScreen());
+          case '/create_client':
+            return MaterialPageRoute(builder: (context) => NewClientScreen());
+          case '/list_clients':
+            return MaterialPageRoute(builder: (context) => ClientListScreen());
+          case '/single_client':
+            // Extract clientId from arguments if needed
+            final clientId = settings.arguments as String?;
+            return MaterialPageRoute(builder: (context) => ClientInfoScreen(clientId: clientId ?? ''));
+          case '/edit_client':
+            // Extract clientId from arguments if needed
+            final clientId = settings.arguments as String?;
+            return MaterialPageRoute(builder: (context) => EditClientScreen(clientId: clientId ?? ''));
+          case '/list_employees':
+            return MaterialPageRoute(builder: (context) => EmployeeListScreen());
+          case '/user_detail':
+            // Extract userId from arguments if needed
+            final userId = settings.arguments as String?;
+            return MaterialPageRoute(builder: (context) => UserDetailScreen(userId: userId ?? ''));
+          case '/user_edit':
+            // Extract userId from arguments if needed
+            final userId = settings.arguments as String?;
+            return MaterialPageRoute(builder: (context) => EditUserScreen(userId: userId ?? ''));
+          case '/user_archive':
+            // Extract userId from arguments if needed
+            final userId = settings.arguments as String?;
+            return MaterialPageRoute(builder: (context) => ArchiveUserScreen(userId: userId ?? ''));
+          case '/user_unarchive':
+            // Extract userId from arguments if needed
+            final userId = settings.arguments as String?;
+            return MaterialPageRoute(builder: (context) => UnarchiveUserScreen(userId: userId ?? ''));
+          case '/user_delete':
+            // Extract userId from arguments if needed
+            final userId = settings.arguments as String?;
+            return MaterialPageRoute(builder: (context) => DeleteUserScreen(userId: userId ?? ''));
+          case '/archived_users':
+            return MaterialPageRoute(builder: (context) => ArchivedUsersScreen());
+          default:
+            return null;
+        }
       },
     );
   }

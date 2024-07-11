@@ -8,7 +8,7 @@ class UnarchiveUserScreen extends StatelessWidget {
 
   Future<void> unarchiveUser(BuildContext context) async {
     try {
-      var url = Uri.parse('https://your-api-endpoint.com/users/$userId/unarchive');
+      var url = Uri.parse('http://127.0.0.1:8000/api/users/$userId/unarchive/');
       var response = await http.post(url);
 
       if (response.statusCode == 200) {
@@ -25,7 +25,7 @@ class UnarchiveUserScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Unarchive User | HRMS'),
+        title: Text('Unarchive User | JBL'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 void main() {
   runApp(MyApp());
 }
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -16,7 +15,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -95,7 +93,6 @@ class LoginScreen extends StatelessWidget {
                                 obscureText: true,
                               ),
                               SizedBox(height: 16.0),
-
                              ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Color(0xFF773697),
@@ -107,9 +104,6 @@ class LoginScreen extends StatelessWidget {
                               },
                               child: Text('Login'),
                             ),
-
-
-
                               TextButton(
 				  onPressed: () {
 				    // Handle password reset action
@@ -124,7 +118,7 @@ class LoginScreen extends StatelessWidget {
 					      style: TextStyle(color: Color(0xFF2F8E92)),
 					    ),
 					    TextSpan(
-					      text: ' Reset',
+					      text: 'Reset',
 					      style: TextStyle(color: Color(0xFF773697)),
 					    ),
 					  ],
@@ -138,7 +132,6 @@ class LoginScreen extends StatelessWidget {
 				    ],
 				  ),
 				),
-
                             ],
                           ),
                         ),
@@ -154,7 +147,6 @@ class LoginScreen extends StatelessWidget {
                     style: TextStyle(
                       color: Color(0xFFD9D9D9),
                       fontSize: 12.0,
-
                     ),
                     textAlign: TextAlign.center,
                   ),

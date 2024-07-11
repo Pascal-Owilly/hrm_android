@@ -8,7 +8,7 @@ class ArchiveUserScreen extends StatelessWidget {
 
   Future<void> archiveUser(BuildContext context) async {
     try {
-      var url = Uri.parse('https://your-api-endpoint.com/users/$userId/archive');
+      var url = Uri.parse('http://127.0.0.1:8000/api/users/$userId/archive/');
       var response = await http.post(url);
 
       if (response.statusCode == 200) {

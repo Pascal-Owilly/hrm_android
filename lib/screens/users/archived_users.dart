@@ -20,7 +20,7 @@ class _ArchivedUsersScreenState extends State<ArchivedUsersScreen> {
 
   Future<void> fetchArchivedUsers() async {
     try {
-      var url = Uri.parse('https://your-api-endpoint.com/users/archived');
+      var url = Uri.parse('http://127.0.0.1:8000/api/users/archived/');
       var response = await http.get(url);
 
       if (response.statusCode == 200) {

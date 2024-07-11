@@ -8,7 +8,7 @@ class DeleteUserScreen extends StatelessWidget {
 
   Future<void> deleteUser(BuildContext context) async {
     try {
-      var url = Uri.parse('https://your-api-endpoint.com/users/$userId');
+      var url = Uri.parse('http://127.0.0.1:8000/api/users/$userId/');
       var response = await http.delete(url);
 
       if (response.statusCode == 200) {
@@ -25,7 +25,7 @@ class DeleteUserScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Delete User | HRMS'),
+        title: Text('Delete User | JBL'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

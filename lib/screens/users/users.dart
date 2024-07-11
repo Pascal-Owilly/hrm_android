@@ -1,7 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../../models/user_model.dart';
 
 class UserListScreen extends StatefulWidget {
   @override
@@ -9,8 +9,9 @@ class UserListScreen extends StatefulWidget {
 }
 
 class _UserListScreenState extends State<UserListScreen> {
-  List<dynamic> users = [];
+  List<User> users = [];
   bool isLoading = true;
+  int expandedIndex = -1; // Initially no item is expanded
 
   @override
   void initState() {
@@ -20,13 +21,13 @@ class _UserListScreenState extends State<UserListScreen> {
 
   Future<void> fetchUsers() async {
     try {
-      var url = Uri.parse('https://your-api-endpoint.com/users'); // Replace with your API endpoint
+      var url = Uri.parse('http://127.0.0.1:8000/api/users/');
       var response = await http.get(url);
 
       if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
+        var data = jsonDecode(response.body) as List;
         setState(() {
-          users = data['users'];
+          users = data.map((json) => User.fromJson(json)).toList();
           isLoading = false;
         });
       } else {
@@ -35,6 +36,32 @@ class _UserListScreenState extends State<UserListScreen> {
     } catch (e) {
       print('Error fetching users: $e');
     }
+  }
+
+  void toggleExpanded(int index) {
+    setState(() {
+      if (expandedIndex == index) {
+        expandedIndex = -1; // Collapse if already expanded
+      } else {
+        expandedIndex = index; // Expand this item
+      }
+    });
+  }
+
+  void navigateToUserDetail(String userId) {
+    Navigator.pushNamed(context, '/user_detail', arguments: userId);
+  }
+
+  void navigateToEditUser(String userId) {
+    Navigator.pushNamed(context, '/user_edit', arguments: userId);
+  }
+
+  void navigateToArchiveUser(String userId) {
+    Navigator.pushNamed(context, '/user_archive', arguments: userId);
+  }
+
+  void navigateToDeleteUser(String userId) {
+    Navigator.pushNamed(context, '/user_delete', arguments: userId);
   }
 
   @override
@@ -47,84 +74,66 @@ class _UserListScreenState extends State<UserListScreen> {
           ? Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'User List',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          // Navigate to archived users screen
-                        },
-                        icon: Icon(Icons.archive, color: Colors.red),
-                        label: Text('Archived Users'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white, // Use backgroundColor instead of primary
-                          foregroundColor: Colors.blue, // Use foregroundColor instead of onPrimary
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: DataTable(
-                        columns: [
-                          DataColumn(label: Text('Profile')),
-                          DataColumn(label: Text('Username')),
-                          DataColumn(label: Text('First Name')),
-                          DataColumn(label: Text('Last Name')),
-                          DataColumn(label: Text('Email')),
-                          DataColumn(label: Text('Action')),
-                        ],
-                        rows: users.map((user) {
-                          return DataRow(cells: [
-                            DataCell(Image.network(user['thumb'] ?? 'https://example.com/default_profile.png', width: 100)),
-                            DataCell(Text(user['username'])),
-                            DataCell(Text(user['first_name'])),
-                            DataCell(Text(user['last_name'])),
-                            DataCell(Text(user['email'])),
-                            DataCell(Row(
+              child: ListView.builder(
+                itemCount: users.length,
+                itemBuilder: (context, index) {
+                  final user = users[index];
+                  return InkWell(
+                    onTap: () {
+                      navigateToUserDetail(user.id.toString());
+                    },
+                    child: Card(
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(user.thumb),
+                            ),
+                            title: Text(user.username),
+                            subtitle: Text('${user.firstName} ${user.lastName}\n${user.email}'),
+                            trailing: IconButton(
+                              icon: Icon(Icons.more_vert),
+                              onPressed: () {
+                                toggleExpanded(index); // Toggle expand/collapse for this item
+                              },
+                            ),
+                          ),
+                          if (expandedIndex == index)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 IconButton(
                                   icon: Icon(Icons.visibility, color: Colors.green),
                                   onPressed: () {
-                                    // View user details
+                                    navigateToUserDetail(user.id.toString());
                                   },
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.edit, color: Colors.blue),
                                   onPressed: () {
-                                    // Edit user
+                                    navigateToEditUser(user.id.toString());
                                   },
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.archive, color: Colors.red),
                                   onPressed: () {
-                                    // Archive user
+                                    navigateToArchiveUser(user.id.toString());
                                   },
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.delete, color: Colors.red),
                                   onPressed: () {
-                                    // Delete user
+                                    navigateToDeleteUser(user.id.toString());
                                   },
                                 ),
                               ],
-                            )),
-                          ]);
-                        }).toList(),
+                            ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
+                  );
+                },
               ),
             ),
     );

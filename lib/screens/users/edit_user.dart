@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../../models/user_model.dart';
 
 class EditUserScreen extends StatefulWidget {
   final String userId;
@@ -12,7 +13,7 @@ class EditUserScreen extends StatefulWidget {
 }
 
 class _EditUserScreenState extends State<EditUserScreen> {
-  late Map<String, dynamic> user;
+  late User user; // Declare user as type User
   bool isLoading = true;
 
   @override
@@ -23,12 +24,13 @@ class _EditUserScreenState extends State<EditUserScreen> {
 
   Future<void> fetchUserDetails() async {
     try {
-      var url = Uri.parse('https://your-api-endpoint.com/users/${widget.userId}');
+      var url = Uri.parse('http://127.0.0.1:8000/api/users/${widget.userId}/');
       var response = await http.get(url);
 
       if (response.statusCode == 200) {
+        Map<String, dynamic> fetchedUser = jsonDecode(response.body);
         setState(() {
-          user = jsonDecode(response.body);
+          user = User.fromJson(fetchedUser);
           isLoading = false;
         });
       } else {
@@ -41,8 +43,14 @@ class _EditUserScreenState extends State<EditUserScreen> {
 
   Future<void> updateUser() async {
     try {
-      var url = Uri.parse('https://your-api-endpoint.com/users/${widget.userId}');
-      var response = await http.put(url, body: jsonEncode(user));
+      var url = Uri.parse('http://127.0.0.1:8000/api/users/${widget.userId}/');
+      var response = await http.put(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(user.toJson()), // Use toJson method to convert user object to JSON
+      );
 
       if (response.statusCode == 200) {
         Navigator.pop(context);
@@ -65,44 +73,118 @@ class _EditUserScreenState extends State<EditUserScreen> {
           : Padding(
               padding: const EdgeInsets.all(16.0),
               child: Form(
-                child: Column(
-                  children: [
-                    TextFormField(
-                      initialValue: user['first_name'],
-                      decoration: InputDecoration(labelText: 'First Name'),
-                      onChanged: (value) {
-                        user['first_name'] = value;
-                      },
-                    ),
-                    TextFormField(
-                      initialValue: user['last_name'],
-                      decoration: InputDecoration(labelText: 'Last Name'),
-                      onChanged: (value) {
-                        user['last_name'] = value;
-                      },
-                    ),
-                    TextFormField(
-                      initialValue: user['email'],
-                      decoration: InputDecoration(labelText: 'Email'),
-                      onChanged: (value) {
-                        user['email'] = value;
-                      },
-                    ),
-                    // Add more fields as needed
-                    SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: updateUser,
-                      child: Text('Update User'),
-                    ),
-                    SizedBox(height: 8),
-                    ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text('Cancel'),
-                    ),
-                  ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        initialValue: user.getUsername(),
+                        decoration: InputDecoration(labelText: 'Username'),
+                        onChanged: (value) {
+                          setState(() {
+                            user.setUsername(value);
+                          });
+                        },
+                      ),
+                      TextFormField(
+                        initialValue: user.getFirstName(),
+                        decoration: InputDecoration(labelText: 'First Name'),
+                        onChanged: (value) {
+                          setState(() {
+                            user.setFirstName(value);
+                          });
+                        },
+                      ),
+                      TextFormField(
+                        initialValue: user.getLastName(),
+                        decoration: InputDecoration(labelText: 'Last Name'),
+                        onChanged: (value) {
+                          setState(() {
+                            user.setLastName(value);
+                          });
+                        },
+                      ),
+                      TextFormField(
+                        initialValue: user.getEmail(),
+                        decoration: InputDecoration(labelText: 'Email'),
+                        onChanged: (value) {
+                          setState(() {
+                            user.setEmail(value);
+                          });
+                        },
+                      ),
+                      TextFormField(
+                        initialValue: user.getPhoneNumber(),
+                        decoration: InputDecoration(labelText: 'Phone Number'),
+                        onChanged: (value) {
+                          setState(() {
+                            user.setPhoneNumber(value);
+                          });
+                        },
+                      ),
+                      TextFormField(
+                        initialValue: user.getAddress(),
+                        decoration: InputDecoration(labelText: 'Address'),
+                        onChanged: (value) {
+                          setState(() {
+                            user.setAddress(value);
+                          });
+                        },
+                      ),
+                      DropdownButtonFormField(
+                        value: user.getClockinPrivileges(),
+                        decoration: InputDecoration(labelText: 'Clock-in Privileges'),
+                        items: user.getClockinPrivilegesOptions().map<DropdownMenuItem<String>>((String option) {
+                          return DropdownMenuItem<String>(
+                            value: option,
+                            child: Text(option),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            user.setClockinPrivileges(value.toString());
+                          });
+                        },
+                      ),
+                      DropdownButtonFormField(
+                        value: user.getClient(),
+                        decoration: InputDecoration(labelText: 'Client'),
+                        items: user.getClientOptions().map<DropdownMenuItem<String>>((String option) {
+                          return DropdownMenuItem<String>(
+                            value: option,
+                            child: Text(option),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            user.setClient(value.toString());
+                          });
+                        },
+                      ),
+                      TextFormField(
+                        initialValue: user.getEmergencyContact(),
+                        decoration: InputDecoration(labelText: 'Emergency Contact'),
+                        onChanged: (value) {
+                          setState(() {
+                            user.setEmergencyContact(value);
+                          });
+                        },
+                      ),
+                      SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: updateUser,
+                        child: Text('Update User'),
+                      ),
+                      SizedBox(height: 8),
+                      ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('Cancel'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
     );
   }
 }
+

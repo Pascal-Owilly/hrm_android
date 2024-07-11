@@ -23,7 +23,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
 
   Future<void> fetchUserDetails() async {
     try {
-      var url = Uri.parse('https://your-api-endpoint.com/users/${widget.userId}');
+      var url = Uri.parse('http://127.0.0.1:8000/api/users/${widget.userId}');
       var response = await http.get(url);
 
       if (response.statusCode == 200) {
@@ -43,52 +43,60 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard | JBL'),
+        title: Text('${user['first_name']} ${user['last_name']}\'s Detail'),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
+          : SingleChildScrollView(
+              padding: EdgeInsets.all(16.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Image.network(user['thumb'] ?? 'https://example.com/default_profile.png'),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('${user['first_name']} ${user['last_name']}\'s Detail', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                            Divider(),
-                            Text('Username: ${user['username']}'),
-                            Text('Email: ${user['email']}'),
-                            Text('Phone Number: ${user['phone_number']}'),
-                            Text('Address: ${user['address']}'),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('More', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                            Divider(),
-                            Text('Clock-in privileges: ${user['clockin_privileges']}'),
-                            Text('Emergency Contact: ${user['emergency_contact']}'),
-                            Text('Gender: ${user['gender']}'),
-                            Text('Department: ${user['department']}'),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+		Center(
+		  child: user['thumb'] != null && user['thumb'].isNotEmpty 
+		    ? Image.network(
+			user['thumb'],
+			width: 120,
+			height: 120,
+			fit: BoxFit.cover,
+			errorBuilder: (context, error, stackTrace) {
+			  return Image.network(
+			    'http://127.0.0.1/default_profile.png',
+			    width: 120,
+			    height: 120,
+			    fit: BoxFit.cover,
+			  );
+			},
+		      )
+		    : Image.network(
+			'http://127.0.0.1/default_profile.png',
+			width: 120,
+			height: 120,
+			fit: BoxFit.cover,
+		      ),
+		),
+
                   SizedBox(height: 16),
+                  Text('Username: ${user['username']}'),
+                  SizedBox(height: 8),
+                  Text('Email: ${user['email']}'),
+                  SizedBox(height: 8),
+                  Text('Phone Number: ${user['phone_number']}'),
+                  SizedBox(height: 8),
+                  Text('Address: ${user['address']}'),
+                  SizedBox(height: 16),
+                  Divider(),
+                  SizedBox(height: 16),
+                  Text('More Details', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 8),
+                  Text('Clock-in privileges: ${user['clockin_privileges']}'),
+                  SizedBox(height: 8),
+                  Text('Emergency Contact: ${user['emergency_contact']}'),
+                  SizedBox(height: 8),
+                  Text('Gender: ${user['gender']}'),
+                  SizedBox(height: 8),
+                  Text('Department: ${user['department'] ?? 'Not assigned'}'),
+                  SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () => Navigator.pop(context),
                     child: Text('Go Back'),
@@ -99,3 +107,4 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
     );
   }
 }
+
