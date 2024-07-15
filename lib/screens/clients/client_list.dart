@@ -20,7 +20,7 @@ class _ClientListScreenState extends State<ClientListScreen> {
   Future<void> fetchClients() async {
     try {
       // Replace with your API endpoint
-      var url = Uri.parse('https://your-api-endpoint.com/clients');
+      var url = Uri.parse('http://127.0.0.1:8000/api/clients/');
       var response = await http.get(url);
 
       if (response.statusCode == 200) {
@@ -72,7 +72,8 @@ class _ClientListScreenState extends State<ClientListScreen> {
 			    trailing: IconButton(
 			      icon: Icon(Icons.arrow_forward),
 			      onPressed: () {
-				Navigator.pushNamed(context, '/single_client', arguments: client['id']);
+    				Navigator.pushNamed(context, '/single_client', arguments: client['id'].toString());
+
 			      },
 			    ),
 			  ),

@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart'; // Import DateFormat from intl package
 
 class AttendanceScreen extends StatefulWidget {
   @override
@@ -12,8 +14,8 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   String keyword = '';
   double? latitude;
   double? longitude;
-  bool clockedIn = false; // Example state, you should replace it with actual state from your backend
-  List<Employee> presentStaffers = []; // Example list, you should replace it with actual data from your backend
+  bool clockedIn = false;
+  List<Employee> presentStaffers = [];
 
   @override
   void initState() {
@@ -30,18 +32,34 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   }
 
   Future<void> _clockInOrOut() async {
-    // Replace with actual clock in/out logic and update the state accordingly
-    setState(() {
-      clockedIn = !clockedIn;
-    });
-  }
-
-  Future<void> _filterByDate(DateTime date) async {
-    // Implement the logic to filter attendance by date
-  }
-
-  Future<void> _searchByName(String keyword) async {
-    // Implement the logic to search attendance by name
+    // Make HTTP POST request to clock in/out
+    final url = Uri.parse('http://127.0.0.1:8000/api/admin_clock-in/');
+    try {
+      final response = await http.post(
+        url,
+      body: jsonEncode({
+        'latitude': latitude.toString(),
+        'longitude': longitude.toString(),
+        'first_in': DateFormat('HH:mm:ss').format(DateTime.now()), 
+        'last_out': DateFormat('HH:mm:ss').format(DateTime.now()), 
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+    
+      if (response.statusCode == 200) {
+        setState(() {
+          clockedIn = !clockedIn;
+        });
+        // Show success message or handle accordingly
+      } else {
+        // Handle error response
+        print('Failed to clock in/out: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 
   @override
@@ -96,7 +114,6 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                        
                           ElevatedButton(
                             onPressed: _downloadPDF,
                             child: Text('Download PDF'),
@@ -262,6 +279,16 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
   void _downloadExcel() {
     // Implement download Excel logic
+  }
+
+  void _filterByDate(DateTime date) {
+    // Implement filtering logic based on date
+    // Update your UI or fetch data as needed
+  }
+
+  void _searchByName(String keyword) {
+    // Implement search logic based on keyword
+    // Update your UI or fetch data as needed
   }
 }
 

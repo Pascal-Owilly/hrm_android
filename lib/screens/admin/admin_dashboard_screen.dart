@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http; // Import the HTTP package
-import 'dart:convert'; 
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import '../../widgets/common_layout.dart';
 import '../../screens/sidebar.dart';
 
@@ -11,7 +12,6 @@ class AdminDashboardScreen extends StatefulWidget {
 }
 
 class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
-  // Initialize variables to store data fetched from endpoints
   int allUsersCount = 0;
   int hrManagersCount = 0;
   int accountManagersCount = 0;
@@ -19,26 +19,30 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   int employeesCount = 0;
   int administratorsCount = 0;
 
-  // Method to fetch data from Django endpoints
   Future<void> fetchData() async {
-    try {
-      // Example endpoint URLs (replace with your actual Django endpoints)
-      var allUsersUrl = Uri.parse('https://your-django-api/all_users');
+try {
+    var allUsersUrl = Uri.parse('http://127.0.0.1:8000/api/users/');
+    var response = await http.get(allUsersUrl);
+    if (response.statusCode == 200) {
+      var userData = jsonDecode(response.body);
+      var userCount = userData['count'];
+
+      setState(() {
+        allUsersCount = userCount;
+      });
+    } 
       var hrManagersUrl = Uri.parse('https://your-django-api/hr_managers');
       var accountManagersUrl = Uri.parse('https://your-django-api/account_managers');
       var clientsUrl = Uri.parse('https://your-django-api/clients');
       var employeesUrl = Uri.parse('https://your-django-api/employees');
       var administratorsUrl = Uri.parse('https://your-django-api/administrators');
 
-      // Make GET requests
       var allUsersResponse = await http.get(allUsersUrl);
       var hrManagersResponse = await http.get(hrManagersUrl);
       var accountManagersResponse = await http.get(accountManagersUrl);
       var clientsResponse = await http.get(clientsUrl);
       var employeesResponse = await http.get(employeesUrl);
       var administratorsResponse = await http.get(administratorsUrl);
-
-      // Parse JSON responses
       var allUsersData = jsonDecode(allUsersResponse.body);
       var hrManagersData = jsonDecode(hrManagersResponse.body);
       var accountManagersData = jsonDecode(accountManagersResponse.body);
@@ -46,9 +50,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       var employeesData = jsonDecode(employeesResponse.body);
       var administratorsData = jsonDecode(administratorsResponse.body);
 
-      // Update state variables with fetched data
       setState(() {
-        allUsersCount = allUsersData['count'];
         hrManagersCount = hrManagersData['count'];
         accountManagersCount = accountManagersData['count'];
         clientsCount = clientsData['count'];
@@ -63,7 +65,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch data when the widget is initialized
     fetchData();
   }
 
@@ -74,129 +75,125 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       titleStyle: TextStyle(
         fontSize: 15.0,
         fontWeight: FontWeight.bold,
-        color: Color(0xFFD9D9D9), // Example: Customize text color
-        
+        color: Color(0xFFD9D9D9),
       ),
       drawer: CustomSidebar(),
-      child: Stack(
-        children: [
-          Container(
-            color: Colors.blueGrey[50],
-          ),
-          Center(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  SizedBox(height: 20.0),
-                  CardWidget(
-                    icon: MdiIcons.accountMultiple,
-                    title: 'All Users',
-                    count: allUsersCount.toString(),
-                    url: '/users',
+      child: Builder(
+        builder: (BuildContext context) {
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                SizedBox(height: 20.0),
+                ElevatedButton(
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                  child: Text('Open Sidebar'),
+                ),
+                SizedBox(height: 20.0),
+                CarouselSlider(
+                  options: CarouselOptions(
+                    height: 200.0,
+                    enlargeCenterPage: true,
+                    enableInfiniteScroll: false,
+                    viewportFraction: 0.8,
                   ),
-                  SizedBox(height: 20.0),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: CardWidget(
-                          icon: MdiIcons.accountAlert,
-                          title: 'HR Managers',
-                          count: hrManagersCount.toString(),
-                          url: '/hr_all',
-                        ),
-                      ),
-                      Expanded(
-                        child: CardWidget(
-                          icon: MdiIcons.accountCog,
-                          title: 'Account Managers',
-                          count: accountManagersCount.toString(),
-                          url: '/account_manager_all',
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20.0),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: CardWidget(
-                          icon: MdiIcons.accountGroup,
-                          title: 'Clients',
-                          count: clientsCount.toString(),
-                          url: '/list_clients',
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20.0),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: CardWidget(
-                          icon: MdiIcons.accountBoxMultiple,
-                          title: 'Employees',
-                          count: employeesCount.toString(),
-                          url: '/list_employees',
-                        ),
-                      ),
-                      Expanded(
-                        child: CardWidget(
-                          icon: MdiIcons.accountSupervisor,
-                          title: 'Administrators',
-                          count: administratorsCount.toString(),
-                          url: '/admin_list',
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20.0),
-                  Card(
-                    child: Column(
-                      children: <Widget>[
-                        ListTile(
-                          title: Text(
-                            'New Employees',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: DataTable(
-                            columns: [
-                              DataColumn(label: Text('Picture')),
-                              DataColumn(label: Text('First name')),
-                              DataColumn(label: Text('Last name')),
-                              DataColumn(label: Text('Mobile')),
-                            ],
-                            rows: [
-                              DataRow(
-                                cells: [
-                                  DataCell(
-                                    CircleAvatar(
-                                      radius: 20.0,
-                                      backgroundImage: AssetImage('assets/images/auth/default_profile.svg'),
-                                    ),
-                                  ),
-                                  DataCell(Text('John')),
-                                  DataCell(Text('Doe')),
-                                  DataCell(
-                                    Text('1234567890'),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                  items: [
+                    CardWidget(
+                      icon: MdiIcons.accountMultiple,
+                      title: 'All Users',
+                      count: allUsersCount.toString(),
+                      url: '/users',
                     ),
+                    CardWidget(
+                      icon: MdiIcons.accountAlert,
+                      title: 'HR Managers',
+                      count: hrManagersCount.toString(),
+                      url: '/hr_all',
+                    ),
+                    CardWidget(
+                      icon: MdiIcons.accountCog,
+                      title: 'Account Managers',
+                      count: accountManagersCount.toString(),
+                      url: '/account_manager_all',
+                    ),
+                    CardWidget(
+                      icon: MdiIcons.accountGroup,
+                      title: 'Clients',
+                      count: clientsCount.toString(),
+                      url: '/list_clients',
+                    ),
+                    CardWidget(
+                      icon: MdiIcons.accountBoxMultiple,
+                      title: 'Employees',
+                      count: employeesCount.toString(),
+                      url: '/list_employees',
+                    ),
+                    CardWidget(
+                      icon: MdiIcons.accountSupervisor,
+                      title: 'Administrators',
+                      count: administratorsCount.toString(),
+                      url: '/admin_list',
+                    ),
+                  ].map((i) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.symmetric(horizontal: 5.0),
+                          child: i,
+                        );
+                      },
+                    );
+                  }).toList(),
+                ),
+                SizedBox(height: 20.0),
+                Card(
+                  margin: EdgeInsets.only(bottom: 20.0),
+                  child: Column(
+                    children: <Widget>[
+                      ListTile(
+                        title: Text(
+                          'New Employees',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DataTable(
+                          columns: [
+                            DataColumn(label: Text('Picture')),
+                            DataColumn(label: Text('First name')),
+                            DataColumn(label: Text('Last name')),
+                            DataColumn(label: Text('Mobile')),
+                          ],
+                          rows: [
+                            DataRow(
+                              cells: [
+                                DataCell(
+                                  CircleAvatar(
+                                    radius: 20.0,
+                                    backgroundImage: AssetImage('assets/images/auth/default_profile.svg'),
+                                  ),
+                                ),
+                                DataCell(Text('John')),
+                                DataCell(Text('Doe')),
+                                DataCell(
+                                  Text('1234567890'),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 20.0),
-                ],
-              ),
+                ),
+              ],
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -224,26 +221,23 @@ class CardWidget extends StatelessWidget {
       child: Card(
         elevation: 3.0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
+          borderRadius: BorderRadius.circular(50.0),
         ),
-        color: Color.fromARGB(255, 249, 250, 251), // Background color
-        shadowColor: Color.fromRGBO(249, 249, 249, 0.7), // Box shadow color with opacity
+        color: Color.fromARGB(255, 249, 250, 251),
+        shadowColor: Color.fromRGBO(249, 249, 249, 0.7),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Icon(icon, color: Color(0xFF773697)), // Icon color
-                  Text(
-                    title,
-                    style: TextStyle(
-                      color: Color(0xFF773697), // Title color
-                    ),
-                  ),
-                ],
+              Icon(icon, color: Color(0xFF773697), size: 40.0),
+              SizedBox(height: 10.0),
+              Text(
+                title,
+                style: TextStyle(
+                  color: Color(0xFF773697),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               SizedBox(height: 10.0),
               Text(
@@ -251,14 +245,14 @@ class CardWidget extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF007BFF), // Count color
+                  color: Color(0xFF007BFF),
                 ),
               ),
               SizedBox(height: 5.0),
               Text(
                 'Total Count',
                 style: TextStyle(
-                  color: Color(0xFFC2C2C2), // URL color
+                  color: Color(0xFFC2C2C2),
                 ),
               ),
             ],

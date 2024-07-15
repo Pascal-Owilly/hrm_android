@@ -1,3 +1,15 @@
+buildscript {
+    ext.kotlin_version = '2.0.0' // Specify the Kotlin version
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.0.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
 plugins {
     id "com.android.application"
     id "kotlin-android"
@@ -24,35 +36,37 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace = "com.example.jbl"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
+    buildToolsVersion = "30.0.3"
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.jbl"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutterVersionCode.toInteger()
-        versionName = flutterVersionName
+        applicationId "com.example.jbl"
+        minSdkVersion flutter.minSdkVersion
+        targetSdkVersion flutter.targetSdkVersion
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        multiDexEnabled true // Add this line if needed
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner" // Add this line if needed
     }
 
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
+            signingConfig signingConfigs.debug
         }
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
     }
 }
 
 flutter {
-    source = "../.."
+    source '../..'
 }
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+

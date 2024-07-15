@@ -27,29 +27,30 @@ class HomeScreen extends StatelessWidget {
               ),
               SizedBox(height: 20.0),
               // Button
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/login'); // Navigate to login screen
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.blue), // Button color
-                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                    EdgeInsets.symmetric(
-                      vertical: 15.0,
-                      horizontal: 30.0,
-                    ),
-                  ),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                  ),
-                ),
-                child: Text(
-                  'Get started →',
-                  style: TextStyle(fontSize: 18.0),
-                ),
-              ),
+		ElevatedButton(
+		  onPressed: () {
+		    Navigator.pushNamed(context, '/login'); // Navigate to login screen
+		  },
+		  style: ButtonStyle(
+		    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFD9D9D9)), // Button color
+		    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+		      EdgeInsets.symmetric(
+			vertical: 15.0,
+			horizontal: 30.0,
+		      ),
+		    ),
+		    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+		      RoundedRectangleBorder(
+			borderRadius: BorderRadius.circular(30.0),
+		      ),
+		    ),
+		  ),
+		  child: Text(
+		    'Get started →',
+		    style: TextStyle(fontSize: 18.0),
+		  ),
+		),
+
             ],
           ),
         ),

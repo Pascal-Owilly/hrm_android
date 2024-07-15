@@ -1,161 +1,103 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(MyApp());
-}
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'JBL Login',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: LoginScreen(),
-    );
-  }
-}
 class LoginScreen extends StatelessWidget {
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  Future<void> loginUser(BuildContext context) async {
+    String url = 'http://127.0.0.1:8000/api/login/';
+    final response = await http.post(
+      Uri.parse(url),
+      body: {
+        'username': usernameController.text,
+        'password': passwordController.text,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Parse the response JSON
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      print('Login Response: $jsonResponse'); // Print entire JSON response
+
+      String token = jsonResponse['token']; // Assuming token is here
+
+      // Store token in SharedPreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('authToken', token);
+
+      // Determine where to navigate based on the user's role
+      String role = jsonResponse['role'].toLowerCase();
+      switch (role) {
+        case 'superuser':
+          Navigator.pushNamed(context, '/admin');
+          break;
+        case 'employee':
+          Navigator.pushNamed(context, '/employee/dashboard');
+          break;
+        case 'account_manager':
+          Navigator.pushNamed(context, '/account-manager');
+          break;
+        case 'human_resource_manager':
+          Navigator.pushNamed(context, '/hr-manager');
+          break;
+        default:
+          // Handle other roles or scenarios
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Unknown role. Please contact support.'),
+            ),
+          );
+          break;
+      }
+    } else {
+      // Handle error, show message to user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to login. Please try again.'),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/board.jpg'),
-                fit: BoxFit.cover,
+      appBar: AppBar(
+        title: Text('Login Page'),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextField(
+                controller: usernameController,
+                decoration: InputDecoration(
+                  labelText: 'Username',
+                ),
               ),
-            ),
-          ),
-          Container(
-            color: Color(0xFF773697).withOpacity(1),
-          ),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(), // Spacer at the top
-                SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-			  padding: const EdgeInsets.symmetric(vertical: 16.0),
-			  child: ClipRRect(
-			    borderRadius: BorderRadius.circular(10.0), // Border radius of 10px
-			    child: Image.asset(
-			      'assets/images/jawabu_logo.jpeg',
-			      width: 100.0,
-			    ),
-			  ),
-			),
-
-                      Text(
-                        'Sign in',
-                        style: TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFFFDEB3D),
-                        ),
-                      ),
-                      SizedBox(height: 16.0),
-                      Card(
-                        color: Colors.white.withOpacity(0.8),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            children: <Widget>[
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Username',
-                                  prefixIcon: Icon(Icons.person, color: Color(0xFF773697)),
-                                  border: OutlineInputBorder(),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Color(0xFF773697)),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 16.0),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Password',
-                                  prefixIcon: Icon(Icons.lock, color: Color(0xFF773697)),
-                                  border: OutlineInputBorder(),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Color(0xFF773697)),
-                                  ),
-                                ),
-                                obscureText: true,
-                              ),
-                              SizedBox(height: 16.0),
-                             ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF773697),
-                                foregroundColor: Color(0xFFFDEB3D),
-                                minimumSize: Size(double.infinity, 50),
-                              ),
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/admin');
-                              },
-                              child: Text('Login'),
-                            ),
-                              TextButton(
-				  onPressed: () {
-				    // Handle password reset action
-				  },
-				  child: Column(
-				    children: [
-				      RichText(
-					text: TextSpan(
-					  children: [
-					    TextSpan(
-					      text: 'Forgot password?',
-					      style: TextStyle(color: Color(0xFF2F8E92)),
-					    ),
-					    TextSpan(
-					      text: 'Reset',
-					      style: TextStyle(color: Color(0xFF773697)),
-					    ),
-					  ],
-					),
-				      ),
-				      SizedBox(height: 8), // Space between text and divider
-				      Divider(
-					height: 1,
-					color: Colors.transparent,
-				      ),
-				    ],
-				  ),
-				),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 16.0),
-                    ],
-                  ),
+              SizedBox(height: 16.0),
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Password',
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    '© 2024 Jawabu Best Limited. All Rights Reserved.',
-                    style: TextStyle(
-                      color: Color(0xFFD9D9D9),
-                      fontSize: 12.0,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-            ),
+              ),
+              SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () => loginUser(context),
+                child: Text('Login'),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 }
+

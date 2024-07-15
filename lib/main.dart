@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'screens/auth/admin_register.dart';
+import 'screens/auth/login.dart';
 import 'screens/auth/login.dart';
 import 'screens/admin/admin_dashboard_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/admin/attendance.dart';
+import 'screens/employees/dashboard.dart';
 import 'screens/employees/employee_create.dart';
 import 'screens/employees/employee_bulk_upload.dart';
 import 'screens/clients/client_create.dart';
@@ -10,6 +13,7 @@ import 'screens/clients/client_list.dart';
 import 'screens/clients/single_client.dart';
 import 'screens/clients/edit_client.dart';
 import 'screens/employees/employee_list.dart';
+import 'screens/employees/employee_detail.dart';
 import 'screens/users/users.dart';
 import 'screens/users/detail_user.dart';
 import 'screens/users/edit_user.dart';
@@ -35,8 +39,11 @@ class MyApp extends StatelessWidget {
       home: HomeScreen(), // Set the initial screen to HomeScreen
       onGenerateRoute: (settings) {
         switch (settings.name) {
+        
           case '/home':
             return MaterialPageRoute(builder: (context) => HomeScreen());
+          case '/admin_register':
+            return MaterialPageRoute(builder: (context) => RegisterScreen());
           case '/login':
             return MaterialPageRoute(builder: (context) => LoginScreen());
           case '/admin':
@@ -63,12 +70,18 @@ class MyApp extends StatelessWidget {
             // Extract clientId from arguments if needed
             final clientId = settings.arguments as String?;
             return MaterialPageRoute(builder: (context) => EditClientScreen(clientId: clientId ?? ''));
+          case '/employee/dashboard':
+      	    return MaterialPageRoute(builder: (context) => EmployeeDashboardScreen());
           case '/list_employees':
             return MaterialPageRoute(builder: (context) => EmployeeListScreen());
           case '/user_detail':
             // Extract userId from arguments if needed
             final userId = settings.arguments as String?;
             return MaterialPageRoute(builder: (context) => UserDetailScreen(userId: userId ?? ''));
+          case '/employee_detail':
+            // Extract userId from arguments if needed
+            final employeeId = settings.arguments as String?;
+            return MaterialPageRoute(builder: (context) => EmployeeDetailScreen(employeeId: employeeId ?? ''));
           case '/user_edit':
             // Extract userId from arguments if needed
             final userId = settings.arguments as String?;

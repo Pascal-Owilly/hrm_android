@@ -14,7 +14,7 @@ class ClientInfoScreen extends StatefulWidget {
 }
 
 class _ClientInfoScreenState extends State<ClientInfoScreen> {
-  Map<String, dynamic>? client;
+  late Map<String, dynamic>? client;
   List<dynamic> employees = [];
 
   @override
@@ -25,7 +25,7 @@ class _ClientInfoScreenState extends State<ClientInfoScreen> {
 
   Future<void> fetchClientInfo() async {
     try {
-      var url = Uri.parse('https://your-api-endpoint.com/clients/${widget.clientId}');
+      var url = Uri.parse('http://127.0.0.1:8000/api/clients/${widget.clientId}');
       var response = await http.get(url);
 
       if (response.statusCode == 200) {

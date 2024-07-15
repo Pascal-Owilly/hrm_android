@@ -2,6 +2,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+void main() {
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    initialRoute: '/',
+    routes: {
+      '/': (context) => EmployeeListScreen(),
+    },
+  ));
+}
+
 class EmployeeListScreen extends StatefulWidget {
   @override
   _EmployeeListScreenState createState() => _EmployeeListScreenState();
@@ -18,13 +28,13 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
 
   Future<void> fetchEmployees() async {
     try {
-      var url = Uri.parse('https://your-api-endpoint.com/employees');
+      var url = Uri.parse('http://127.0.0.1:8000/api/employees/');
       var response = await http.get(url);
 
       if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
+        var data = jsonDecode(response.body) as List;
         setState(() {
-          employees = data['employees']; // Adjust according to your API response structure
+          employees = data;
         });
       } else {
         print('Failed to fetch employees');
@@ -67,14 +77,15 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
                     Divider(),
                     if (employees.isNotEmpty)
                       ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: employees.length,
-                        itemBuilder: (context, index) {
-                          var employee = employees[index];
-                          return EmployeeCard(employee: employee);
-                        },
-                      )
+			  shrinkWrap: true,
+			  physics: NeverScrollableScrollPhysics(),
+			  itemCount: employees.length,
+			  itemBuilder: (context, index) {
+			    var employee = employees[index];
+			    return EmployeeCard(employee: employee);
+			  },
+			)
+
                     else
                       Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -142,11 +153,8 @@ class EmployeeCard extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(employee['phone_number']),
-            Text(
-              employee['email'],
-              style: TextStyle(color: Colors.red),
-            ),
+            Text(employee['email'] ?? 'No email provided'),
+            Text(employee['mobile'] ?? 'No mobile number provided'),
           ],
         ),
         trailing: PopupMenuButton(
@@ -156,43 +164,22 @@ class EmployeeCard extends StatelessWidget {
                 leading: Icon(Icons.remove_red_eye),
                 title: Text('View'),
                 onTap: () {
-                  Navigator.pushNamed(context, '/employee_view', arguments: employee['id']);
+			Navigator.pushNamed(
+			  context,
+			  '/employee_detail',
+			  arguments: employee['id'].toString(),
+			);
                 },
               ),
             ),
-            PopupMenuItem(
-              child: ListTile(
-                leading: Icon(Icons.edit),
-                title: Text('Edit'),
-                onTap: () {
-                  Navigator.pushNamed(context, '/user_update', arguments: employee['id']);
-                },
-              ),
-            ),
-            PopupMenuItem(
-              child: ListTile(
-                leading: Icon(Icons.archive),
-                title: Text('Archive'),
-                onTap: () {
-                  Navigator.pushNamed(context, '/user_archive', arguments: employee['id']);
-                },
-              ),
-            ),
-            PopupMenuItem(
-              child: ListTile(
-                leading: Icon(Icons.delete),
-                title: Text('Delete'),
-                onTap: () {
-                  Navigator.pushNamed(context, '/employee_delete', arguments: employee['id']);
-                },
-              ),
-            ),
+            // Add more options as needed (Edit, Archive, Delete, etc.)
           ],
         ),
       ),
     );
   }
 }
+
 
 class Pagination extends StatelessWidget {
   @override
@@ -222,17 +209,3 @@ class Pagination extends StatelessWidget {
   }
 }
 
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    initialRoute: '/',
-    routes: {
-      '/': (context) => EmployeeListScreen(),
-      '/admin_dashboard': (context) => Scaffold(body: Center(child: Text('Admin Dashboard'))),
-      '/employee_view': (context) => Scaffold(body: Center(child: Text('Employee View'))),
-      '/user_update': (context) => Scaffold(body: Center(child: Text('User Update'))),
-      '/user_archive': (context) => Scaffold(body: Center(child: Text('User Archive'))),
-      '/employee_delete': (context) => Scaffold(body: Center(child: Text('Employee Delete'))),
-    },
-  ));
-}
