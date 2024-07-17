@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
+import '../../screens/sidebar.dart';
 class ClientListScreen extends StatefulWidget {
   @override
   _ClientListScreenState createState() => _ClientListScreenState();
@@ -45,6 +45,7 @@ class _ClientListScreenState extends State<ClientListScreen> {
       appBar: AppBar(
         title: Text('Client | JBL'),
       ),
+      drawer: CustomSidebar(), 
       body: Container(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -52,7 +53,7 @@ class _ClientListScreenState extends State<ClientListScreen> {
           children: [
             Text(
               'Client List',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
             Divider(),

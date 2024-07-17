@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/auth/admin_register.dart';
 import 'screens/auth/login.dart';
-import 'screens/auth/login.dart';
+import 'screens/auth/password_reset.dart';
 import 'screens/admin/admin_dashboard_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/admin/attendance.dart';
@@ -15,6 +15,7 @@ import 'screens/clients/edit_client.dart';
 import 'screens/employees/employee_list.dart';
 import 'screens/employees/employee_detail.dart';
 import 'screens/users/users.dart';
+import 'screens/hr_managers/list.dart';
 import 'screens/users/detail_user.dart';
 import 'screens/users/edit_user.dart';
 import 'screens/users/archive_user.dart';
@@ -22,6 +23,7 @@ import 'screens/users/unarchive_user.dart';
 import 'screens/users/delete_user.dart';
 import 'screens/users/archived_users.dart';
 import 'screens/admin/admin_list.dart';
+import 'screens/account_managers/dashboard.dart';
 
 void main() {
   runApp(MyApp());
@@ -46,6 +48,15 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute(builder: (context) => RegisterScreen());
           case '/login':
             return MaterialPageRoute(builder: (context) => LoginScreen());
+          case '/password_reset':
+		  final args = settings.arguments as Map<String, String>;
+		  return MaterialPageRoute(
+		    builder: (context) => PasswordResetScreen(
+		      uidb64: args['uidb64']!,
+		      token: args['token']!,
+		    ),
+		  );
+
           case '/admin':
             return MaterialPageRoute(builder: (context) => AdminDashboardScreen());
           case '/users':
@@ -54,6 +65,11 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute(builder: (context) => AdminListScreen());
           case '/attendance_admin_view':
             return MaterialPageRoute(builder: (context) => AttendanceScreen());
+          case '/hr_list':
+            return MaterialPageRoute(builder: (context) => HrListScreen());
+          case '/account_manager_dashboard':
+            return MaterialPageRoute(builder: (context) => DashboardPage());
+        
           case '/add_new_employee':
             return MaterialPageRoute(builder: (context) => NewEmployeeScreen());
           case '/employee_bulk_upload':
@@ -62,6 +78,7 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute(builder: (context) => NewClientScreen());
           case '/list_clients':
             return MaterialPageRoute(builder: (context) => ClientListScreen());
+            
           case '/single_client':
             // Extract clientId from arguments if needed
             final clientId = settings.arguments as String?;

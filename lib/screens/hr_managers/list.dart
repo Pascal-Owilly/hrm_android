@@ -7,18 +7,19 @@ void main() {
     debugShowCheckedModeBanner: false,
     initialRoute: '/',
     routes: {
-      '/': (context) => UserListScreen(),
+      '/': (context) => HrListScreen(),
     },
   ));
 }
 
-class UserListScreen extends StatefulWidget {
+class HrListScreen extends StatefulWidget {
   @override
-  _UserListScreenState createState() => _UserListScreenState();
+  _HrListScreenState createState() => _HrListScreenState();
+  
 }
 
-class _UserListScreenState extends State<UserListScreen> {
-  List<dynamic> users = []; // Change variable name to users
+class _HrListScreenState extends State<HrListScreen> {
+  List<dynamic> users = []; 
 
   @override
   void initState() {
@@ -28,7 +29,7 @@ class _UserListScreenState extends State<UserListScreen> {
 
   Future<void> fetchUsers() async {
     try {
-      var url = Uri.parse('http://127.0.0.1:8000/api/users/');
+      var url = Uri.parse('http://127.0.0.1:8000/api/hr-managers/');
       var response = await http.get(url);
 
       if (response.statusCode == 200) {
@@ -48,7 +49,7 @@ class _UserListScreenState extends State<UserListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Users | JBL'), // Update screen title
+        title: Text('All HRs | JBL'), // Update screen title
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -59,7 +60,7 @@ class _UserListScreenState extends State<UserListScreen> {
               Row(
                 children: [
                   Expanded(
-                    child: Breadcrumb(), // Keep breadcrumb as is if it suits your navigation
+                    child: Breadcrumb(), 
                   ),
                 ],
               ),
@@ -70,7 +71,7 @@ class _UserListScreenState extends State<UserListScreen> {
                   children: [
                     ListTile(
                       title: Text(
-                        'All Users',
+                        'All HR Managers',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -122,7 +123,7 @@ class Breadcrumb extends StatelessWidget {
           ),
           SizedBox(width: 10),
           Text(
-            'User',
+            'Hr Managers',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           SizedBox(width: 10),
@@ -155,6 +156,7 @@ class UserCard extends StatelessWidget {
           children: [
             Text(user['email'] ?? 'No email provided'),
             Text(user['phone_number'] ?? 'No mobile number provided'),
+            Text(user['address'] ?? 'No mobile number provided'),
           ],
         ),
         trailing: PopupMenuButton(

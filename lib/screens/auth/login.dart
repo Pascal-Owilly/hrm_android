@@ -22,26 +22,30 @@ class LoginScreen extends StatelessWidget {
       Map<String, dynamic> jsonResponse = jsonDecode(response.body);
       print('Login Response: $jsonResponse'); // Print entire JSON response
 
-      String token = jsonResponse['token']; // Assuming token is here
+      String token = jsonResponse['token'];
+      String username = jsonResponse['username'];
+      String role = jsonResponse['role'];
 
-      // Store token in SharedPreferences
+      // Store user details in SharedPreferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('authToken', token);
+      await prefs.setString('username', username);
+      await prefs.setString('role', role);
 
       // Determine where to navigate based on the user's role
-      String role = jsonResponse['role'].toLowerCase();
-      switch (role) {
+      String roleLower = role.toLowerCase();
+      switch (roleLower) {
         case 'superuser':
-          Navigator.pushNamed(context, '/admin');
+          Navigator.pushNamed(context, '/attendance_admin_view');
           break;
         case 'employee':
           Navigator.pushNamed(context, '/employee/dashboard');
           break;
         case 'account_manager':
-          Navigator.pushNamed(context, '/account-manager');
+          Navigator.pushNamed(context, '/account_manager_dashboard');
           break;
         case 'human_resource_manager':
-          Navigator.pushNamed(context, '/hr-manager');
+          Navigator.pushNamed(context, '/attendance_admin_view');
           break;
         default:
           // Handle other roles or scenarios
@@ -60,6 +64,10 @@ class LoginScreen extends StatelessWidget {
         ),
       );
     }
+  }
+
+  void navigateToPasswordReset(BuildContext context) {
+    Navigator.pushNamed(context, '/password_reset'); 
   }
 
   @override
@@ -92,6 +100,17 @@ class LoginScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () => loginUser(context),
                 child: Text('Login'),
+              ),
+              SizedBox(height: 8.0),
+              GestureDetector(
+                onTap: () => navigateToPasswordReset(context),
+                child: Text(
+                  'Forgot Password?',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
               ),
             ],
           ),

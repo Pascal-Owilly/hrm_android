@@ -31,7 +31,7 @@ try {
         allUsersCount = userCount;
       });
     } 
-      var hrManagersUrl = Uri.parse('https://your-django-api/hr_managers');
+      var hrManagersUrl = Uri.parse('http://127.0.0.1:8000/api/hr-managers/');
       var accountManagersUrl = Uri.parse('https://your-django-api/account_managers');
       var clientsUrl = Uri.parse('https://your-django-api/clients');
       var employeesUrl = Uri.parse('https://your-django-api/employees');
@@ -89,7 +89,7 @@ try {
                   onPressed: () {
                     Scaffold.of(context).openDrawer();
                   },
-                  child: Text('Open Sidebar'),
+                  child: Text('Hello'),
                 ),
                 SizedBox(height: 20.0),
                 CarouselSlider(
@@ -110,7 +110,7 @@ try {
                       icon: MdiIcons.accountAlert,
                       title: 'HR Managers',
                       count: hrManagersCount.toString(),
-                      url: '/hr_all',
+                      url: '/hr_list',
                     ),
                     CardWidget(
                       icon: MdiIcons.accountCog,
@@ -149,47 +149,7 @@ try {
                   }).toList(),
                 ),
                 SizedBox(height: 20.0),
-                Card(
-                  margin: EdgeInsets.only(bottom: 20.0),
-                  child: Column(
-                    children: <Widget>[
-                      ListTile(
-                        title: Text(
-                          'New Employees',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: DataTable(
-                          columns: [
-                            DataColumn(label: Text('Picture')),
-                            DataColumn(label: Text('First name')),
-                            DataColumn(label: Text('Last name')),
-                            DataColumn(label: Text('Mobile')),
-                          ],
-                          rows: [
-                            DataRow(
-                              cells: [
-                                DataCell(
-                                  CircleAvatar(
-                                    radius: 20.0,
-                                    backgroundImage: AssetImage('assets/images/auth/default_profile.svg'),
-                                  ),
-                                ),
-                                DataCell(Text('John')),
-                                DataCell(Text('Doe')),
-                                DataCell(
-                                  Text('1234567890'),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+ 
               ],
             ),
           );

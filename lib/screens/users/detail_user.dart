@@ -81,7 +81,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                   SizedBox(height: 8),
                   Text('Email: ${user['email']}'),
                   SizedBox(height: 8),
-                  Text('Phone Number: ${user['phone_number']}'),
+                  Text('Phone Number: ${user['first_name']}'),
                   SizedBox(height: 8),
                   Text('Address: ${user['address']}'),
                   SizedBox(height: 16),

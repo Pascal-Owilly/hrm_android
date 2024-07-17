@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'sidebar.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: Text('Jawabu Best Limited'),
       ),
+      //drawer: CustomSidebar(), 
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/board.jpg'), // Replace with your image path
+            image: AssetImage('assets/images/board2.jpg'), 
             fit: BoxFit.cover,
           ),
           color: Color.fromRGBO(119, 54, 151, 1), 
@@ -22,7 +24,7 @@ class HomeScreen extends StatelessWidget {
             children: [
               // Carousel
               SizedBox(
-                height: 300, // Adjust height as needed
+                height: 350, // Adjust height as needed
                 child: CarouselWidget(),
               ),
               SizedBox(height: 20.0),
@@ -35,8 +37,8 @@ class HomeScreen extends StatelessWidget {
 		    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFD9D9D9)), // Button color
 		    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
 		      EdgeInsets.symmetric(
-			vertical: 15.0,
-			horizontal: 30.0,
+			vertical: 13.0,
+			horizontal: 20.0,
 		      ),
 		    ),
 		    shape: MaterialStateProperty.all<RoundedRectangleBorder>(

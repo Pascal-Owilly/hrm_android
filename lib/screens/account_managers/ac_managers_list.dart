@@ -7,18 +7,18 @@ void main() {
     debugShowCheckedModeBanner: false,
     initialRoute: '/',
     routes: {
-      '/': (context) => UserListScreen(),
+      '/': (context) => AccountManagersListScreen(),
     },
   ));
 }
 
-class UserListScreen extends StatefulWidget {
+class AccountManagersListScreen extends StatefulWidget {
   @override
-  _UserListScreenState createState() => _UserListScreenState();
+  _AccountManagersListScreenState createState() => _AccountManagersListScreenState();
 }
 
-class _UserListScreenState extends State<UserListScreen> {
-  List<dynamic> users = []; // Change variable name to users
+class _AccountManagersListScreenState extends State<AccountManagersListScreen> {
+  List<dynamic> users = []; 
 
   @override
   void initState() {
@@ -28,7 +28,7 @@ class _UserListScreenState extends State<UserListScreen> {
 
   Future<void> fetchUsers() async {
     try {
-      var url = Uri.parse('http://127.0.0.1:8000/api/users/');
+      var url = Uri.parse('http://127.0.0.1:8000/api/account-managers/');
       var response = await http.get(url);
 
       if (response.statusCode == 200) {
@@ -48,7 +48,7 @@ class _UserListScreenState extends State<UserListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Users | JBL'), // Update screen title
+        title: Text('All HRs | JBL'), // Update screen title
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -70,7 +70,7 @@ class _UserListScreenState extends State<UserListScreen> {
                   children: [
                     ListTile(
                       title: Text(
-                        'All Users',
+                        'All HR Managers',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -122,7 +122,7 @@ class Breadcrumb extends StatelessWidget {
           ),
           SizedBox(width: 10),
           Text(
-            'User',
+            'Hr Managers',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           SizedBox(width: 10),
@@ -208,4 +208,3 @@ class Pagination extends StatelessWidget {
     );
   }
 }
-
